@@ -29,6 +29,7 @@ func main() {
 
 	// todo router
 	e.GET("/api/todos", GetAllTodos)
+	e.POST("/api/todos", CreateTodo)
 
 	port := os.Getenv("PORT")
 	e.Logger.Fatal(e.Start(":" + port))
