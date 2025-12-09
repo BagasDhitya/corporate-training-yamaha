@@ -13,7 +13,7 @@ type Todo struct {
 	Title       string     `json:"title"`
 	Description string     `json:"description"`
 	Category    string     `json:"category"`
-	isCompleted bool       `json:"isCompleted"`
+	IsCompleted bool       `json:"isCompleted"`
 	CreatedAt   time.Time  `json:"created_at"`
 	UpdatedAt   time.Time  `json:"updated_at"`
 	DeletedAt   *time.Time `json:"deleted_at"`
@@ -45,7 +45,7 @@ func GetAllTodos(c echo.Context) error {
 			&t.Title,
 			&t.Description,
 			&t.Category,
-			&t.isCompleted,
+			&t.IsCompleted,
 			&t.CreatedAt,
 			&t.UpdatedAt,
 			&t.DeletedAt,
@@ -82,7 +82,7 @@ func GetById(c echo.Context) error {
 		&t.Title,
 		&t.Description,
 		&t.Category,
-		&t.isCompleted,
+		&t.IsCompleted,
 		&t.CreatedAt,
 		&t.UpdatedAt,
 		&t.DeletedAt,
@@ -134,7 +134,7 @@ func CreateTodo(c echo.Context) error {
 		input.Title,
 		input.Description,
 		input.Category,
-		input.isCompleted,
+		input.IsCompleted,
 	).Scan(&input.ID, &input.CreatedAt, &input.UpdatedAt)
 
 	if err != nil {
