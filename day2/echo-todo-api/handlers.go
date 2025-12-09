@@ -3,6 +3,8 @@ package main
 import (
 	"database/sql"
 	"net/http"
+	"strconv"
+	"strings"
 	"time"
 
 	"github.com/labstack/echo/v4"
@@ -20,12 +22,49 @@ type Todo struct {
 }
 
 func GetAllTodos(c echo.Context) error {
-	rows, err := DB.Query(`
-		SELECT id, title, description, category, isCompleted, created_at, updated_at, deleted_at
+	search := c.QueryParam("search")
+	category := c.QueryParam("category")
+	sort := c.QueryParam("sort")
+
+	// default sorting : DESC
+	if sort != "asc" {
+		sort = "desc"
+	}
+
+	query := `SELECT id, title, description, category, isCompleted, created_at, updated_at, deleted_at
 		FROM todos
-		WHERE deleted_at is NULL
-		ORDER BY created_at DESC
-	`)
+		WHERE deleted_at is NULL`
+
+	// filter by category
+	if category != "" {
+		query = query + " AND category = $CATEGORY"
+	}
+
+	// search: title or description
+	if search != "" {
+		query = query + " AND (LOWER(title) LIKE $SEARCH OR LOWER(description) LIKE $SEARCH) "
+	}
+
+	// sorting
+	query = query + " ORDER BY created_at " + sort
+
+	// --- dynamic parameter mapping
+	var params []interface{}
+	paramIndex := 1
+
+	if category != "" {
+		query = strings.Replace(query, "$CATEGORY", "$"+strconv.Itoa(paramIndex), 1)
+		params = append(params, category)
+		paramIndex++
+	}
+
+	if search != "" {
+		query = strings.Replace(query, "$SEARCH", "$"+strconv.Itoa(paramIndex), -1)
+		params = append(params, "%"+strings.ToLower(search)+"%")
+		paramIndex++
+	}
+
+	rows, err := DB.Query(query, params...)
 
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{
