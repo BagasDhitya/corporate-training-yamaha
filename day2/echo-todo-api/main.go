@@ -19,6 +19,7 @@ func main() {
 
 	// connect DB
 	ConnectDB()
+	ExportLogger()
 
 	// init echo
 	e := echo.New()
