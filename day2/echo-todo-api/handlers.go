@@ -85,7 +85,7 @@ func CreateTodo(c echo.Context) error {
 	}
 
 	query := `INSERT INTO todos (title, description, category, isCompleted, created_at, updated_at)
-			  VALUES ($1, $2, $3, $4, NOW(), NOW()),
+			  VALUES ($1, $2, $3, $4, NOW(), NOW())
 			  RETURNING id, created_at, updated_at`
 
 	err := DB.QueryRow(
