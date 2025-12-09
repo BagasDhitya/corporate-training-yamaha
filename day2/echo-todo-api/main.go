@@ -23,6 +23,8 @@ func main() {
 	// init echo
 	e := echo.New()
 
+	e.Use(MonitoringMiddleware)
+
 	e.GET("/", func(c echo.Context) error {
 		return c.String(http.StatusOK, "Hello world! DB Connected. Echo API is running")
 	})
