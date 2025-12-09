@@ -1,6 +1,7 @@
 package main
 
 import (
+	"database/sql"
 	"net/http"
 	"time"
 
@@ -63,6 +64,46 @@ func GetAllTodos(c echo.Context) error {
 	return c.JSON(http.StatusOK, echo.Map{
 		"message": "success",
 		"data":    todos,
+	})
+}
+
+func GetById(c echo.Context) error {
+
+	id := c.Param("id")
+
+	var t Todo
+
+	query := `SELECT id, title, description, category, isCompleted, created_at, updated_at, deleted_at
+			  FROM todos
+			  WHERE id = $1 AND deleted_at IS NULL`
+
+	err := DB.QueryRow(query, id).Scan(
+		&t.ID,
+		&t.Title,
+		&t.Description,
+		&t.Category,
+		&t.isCompleted,
+		&t.CreatedAt,
+		&t.UpdatedAt,
+		&t.DeletedAt,
+	)
+
+	if err == sql.ErrNoRows {
+		return c.JSON(http.StatusNotFound, echo.Map{
+			"message": "Todo not found",
+		})
+	}
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{
+			"message": "Failed to fetch todo",
+			"error":   err.Error(),
+		})
+	}
+
+	return c.JSON(http.StatusOK, echo.Map{
+		"message": "success",
+		"data":    t,
 	})
 }
 

@@ -29,6 +29,7 @@ func main() {
 
 	// todo router
 	e.GET("/api/todos", GetAllTodos)
+	e.GET("/api/todos/:id", GetById)
 	e.POST("/api/todos", CreateTodo)
 
 	port := os.Getenv("PORT")
