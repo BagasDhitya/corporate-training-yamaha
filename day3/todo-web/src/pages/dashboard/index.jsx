@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { getAllTodos } from "../../api/todo";
 
 export default function Dashboard() {
-  const [todos, setTodos] = useState([]);
+  const [todos, setTodos] = useState({ data: [] });
 
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("");
@@ -32,6 +32,14 @@ export default function Dashboard() {
             placeholder="Search title or description ..."
             onChange={(e) => setSearch(e.target.value)}
           />
+          <div className="flex space-x-5">
+            <button
+              className="w-full p-5 bg-blue-600 text-white"
+              onClick={() => loadTodos()}
+            >
+              Apply
+            </button>
+          </div>
         </div>
       </div>
 
