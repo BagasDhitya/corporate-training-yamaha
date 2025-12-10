@@ -12,12 +12,7 @@ export default function App() {
       <div className="flex p-4 space-x-5 justify-center items-center">
         <TodoButton onHandler={increment} title={"+"} type={"increment"} />
         <h2 className="text-black">{count}</h2>
-        <button
-          onClick={decrement}
-          className="p-3 bg-red-500 text-white w-40 rounded-md"
-        >
-          -
-        </button>
+        <TodoButton onHandler={decrement} title={"-"} type={"decrement"} />
       </div>
     </div>
   );
