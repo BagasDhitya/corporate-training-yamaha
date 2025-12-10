@@ -16,6 +16,7 @@ export function useCount() {
     }
 
     return {
+        setCount,
         count,
         increment,
         decrement
