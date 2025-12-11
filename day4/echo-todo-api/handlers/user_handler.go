@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"database/sql"
 	"net/http"
 
 	"echo-todo-api/config"
@@ -51,5 +52,51 @@ func Register(c echo.Context) error {
 	return c.JSON(http.StatusCreated, echo.Map{
 		"message": "Registered successfully",
 		"user_id": userID,
+	})
+}
+
+// login
+func Login(c echo.Context) error {
+	var req models.LoginRequest
+
+	if err := c.Bind(&req); err != nil {
+		return c.JSON(http.StatusBadRequest, echo.Map{
+			"message": "Invalid request",
+		})
+	}
+
+	var user models.User
+
+	query := `SELECT id, email, password, role
+			  FROM users
+			  WHERE email = $1 AND deleted_at IS NULL`
+
+	err := config.DB.QueryRow(query, req.Email).Scan(&user.ID, &user.Email, &user.Password, &user.Role)
+
+	if err == sql.ErrNoRows {
+		return c.JSON(http.StatusUnauthorized, echo.Map{
+			"message": "Invalid credentials",
+		})
+	}
+
+	if !utils.CheckPassword(user.Password, req.Password) {
+		return c.JSON(http.StatusUnauthorized, echo.Map{
+			"message": "Invalid password",
+		})
+	}
+
+	// generate JWT
+	token, err := utils.GenerateToken(user.ID, user.Role)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{
+			"message": "Failed to generate token",
+		})
+	}
+
+	return c.JSON(http.StatusOK, echo.Map{
+		"message": "Login success",
+		"email":   user.Email,
+		"token":   token,
+		"role":    user.Role,
 	})
 }

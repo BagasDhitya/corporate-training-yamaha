@@ -49,6 +49,7 @@ func main() {
 	e.POST("/api/todos", CreateTodo)
 
 	e.POST("/api/auth/register", handlers.Register)
+	e.POST("/api/auth/login", handlers.Login)
 
 	port := os.Getenv("PORT")
 	e.Logger.Fatal(e.Start(":" + port))
