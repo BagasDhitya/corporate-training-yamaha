@@ -5,21 +5,11 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
-	"time"
+
+	"echo-todo-api/models"
 
 	"github.com/labstack/echo/v4"
 )
-
-type Todo struct {
-	ID          int        `json:"id"`
-	Title       string     `json:"title"`
-	Description string     `json:"description"`
-	Category    string     `json:"category"`
-	IsCompleted bool       `json:"isCompleted"`
-	CreatedAt   time.Time  `json:"created_at"`
-	UpdatedAt   time.Time  `json:"updated_at"`
-	DeletedAt   *time.Time `json:"deleted_at"`
-}
 
 func GetAllTodos(c echo.Context) error {
 	search := c.QueryParam("search")
@@ -75,10 +65,10 @@ func GetAllTodos(c echo.Context) error {
 
 	defer rows.Close()
 
-	var todos []Todo
+	var todos []models.Todo
 
 	for rows.Next() {
-		var t Todo
+		var t models.Todo
 		err := rows.Scan(
 			&t.ID,
 			&t.Title,
@@ -110,7 +100,7 @@ func GetById(c echo.Context) error {
 
 	id := c.Param("id")
 
-	var t Todo
+	var t models.Todo
 
 	query := `SELECT id, title, description, category, isCompleted, created_at, updated_at, deleted_at
 			  FROM todos
@@ -147,7 +137,7 @@ func GetById(c echo.Context) error {
 }
 
 func CreateTodo(c echo.Context) error {
-	var input Todo
+	var input models.Todo
 
 	// bind json input ke struct
 	if err := c.Bind(&input); err != nil {
