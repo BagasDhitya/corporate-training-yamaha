@@ -8,6 +8,9 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+
+	"echo-todo-api/config"
+	"echo-todo-api/handlers"
 )
 
 func main() {
@@ -19,7 +22,7 @@ func main() {
 	}
 
 	// connect DB
-	ConnectDB()
+	config.ConnectDB()
 	ExportLogger()
 
 	// init echo
@@ -44,6 +47,8 @@ func main() {
 	e.GET("/api/todos", GetAllTodos)
 	e.GET("/api/todos/:id", GetById)
 	e.POST("/api/todos", CreateTodo)
+
+	e.POST("/api/auth/register", handlers.Register)
 
 	port := os.Getenv("PORT")
 	e.Logger.Fatal(e.Start(":" + port))

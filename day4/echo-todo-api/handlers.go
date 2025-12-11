@@ -6,6 +6,7 @@ import (
 	"strconv"
 	"strings"
 
+	"echo-todo-api/config"
 	"echo-todo-api/models"
 
 	"github.com/labstack/echo/v4"
@@ -54,7 +55,7 @@ func GetAllTodos(c echo.Context) error {
 		paramIndex++
 	}
 
-	rows, err := DB.Query(query, params...)
+	rows, err := config.DB.Query(query, params...)
 
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{
@@ -106,7 +107,7 @@ func GetById(c echo.Context) error {
 			  FROM todos
 			  WHERE id = $1 AND deleted_at IS NULL`
 
-	err := DB.QueryRow(query, id).Scan(
+	err := config.DB.QueryRow(query, id).Scan(
 		&t.ID,
 		&t.Title,
 		&t.Description,
@@ -158,7 +159,7 @@ func CreateTodo(c echo.Context) error {
 			  VALUES ($1, $2, $3, $4, NOW(), NOW())
 			  RETURNING id, created_at, updated_at`
 
-	err := DB.QueryRow(
+	err := config.DB.QueryRow(
 		query,
 		input.Title,
 		input.Description,
