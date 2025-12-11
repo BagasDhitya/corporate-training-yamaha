@@ -44,9 +44,9 @@ func main() {
 	})
 
 	// todo router
-	e.GET("/api/todos", GetAllTodos)
-	e.GET("/api/todos/:id", GetById)
-	e.POST("/api/todos", CreateTodo)
+	e.GET("/api/todos", handlers.GetAllTodos)
+	e.GET("/api/todos/:id", handlers.GetById)
+	e.POST("/api/todos", handlers.CreateTodo)
 
 	e.POST("/api/auth/register", handlers.Register)
 	e.POST("/api/auth/login", handlers.Login)

@@ -1,6 +1,8 @@
 package models
 
-import "time"
+import (
+	"time"
+)
 
 type Todo struct {
 	ID          int        `json:"id"`
@@ -12,3 +14,4 @@ type Todo struct {
 	UpdatedAt   time.Time  `json:"updated_at"`
 	DeletedAt   *time.Time `json:"deleted_at"`
 }
+
