@@ -100,3 +100,37 @@ func Login(c echo.Context) error {
 		"role":    user.Role,
 	})
 }
+
+// admin get all users
+func AdminGetAllUsers(c echo.Context) error {
+	role := c.Get("role").(string)
+
+	if role != "ADMIN" {
+		return c.JSON(http.StatusForbidden, echo.Map{
+			"message": "You are not allowed to access this resource.",
+		})
+	}
+
+	query := `SELECT id, email, role, created_at, updated_at FROM users WHERE deleted_at IS NULL`
+	rows, err := QueryHelper(query)
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{
+			"message": "Failed to fetch users",
+		})
+	}
+
+	defer rows.Close()
+	var users []models.User
+
+	for rows.Next() {
+		var u models.User
+		rows.Scan(&u.ID, &u.Email, &u.Role, &u.CreatedAt, &u.UpdatedAt)
+		users = append(users, u)
+	}
+
+	return c.JSON(http.StatusOK, echo.Map{
+		"message": "success",
+		"data":    users,
+	})
+}

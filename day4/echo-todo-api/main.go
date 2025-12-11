@@ -11,6 +11,7 @@ import (
 
 	"echo-todo-api/config"
 	"echo-todo-api/handlers"
+	"echo-todo-api/middlewares"
 )
 
 func main() {
@@ -23,12 +24,12 @@ func main() {
 
 	// connect DB
 	config.ConnectDB()
-	ExportLogger()
+	middlewares.ExportLogger()
 
 	// init echo
 	e := echo.New()
 
-	e.Use(MonitoringMiddleware)
+	e.Use(middlewares.MonitoringMiddleware)
 
 	// === CORS ===
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
@@ -50,6 +51,7 @@ func main() {
 
 	e.POST("/api/auth/register", handlers.Register)
 	e.POST("/api/auth/login", handlers.Login)
+	e.GET("/api/auth/users", handlers.AdminGetAllUsers)
 
 	port := os.Getenv("PORT")
 	e.Logger.Fatal(e.Start(":" + port))
