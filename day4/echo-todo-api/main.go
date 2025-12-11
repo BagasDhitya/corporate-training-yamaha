@@ -51,7 +51,7 @@ func main() {
 
 	e.POST("/api/auth/register", handlers.Register)
 	e.POST("/api/auth/login", handlers.Login)
-	e.GET("/api/auth/users", handlers.AdminGetAllUsers)
+	e.GET("/api/auth/users", middlewares.AuthMiddleware(middlewares.AdminMiddleware(handlers.AdminGetAllUsers)))
 
 	port := os.Getenv("PORT")
 	e.Logger.Fatal(e.Start(":" + port))

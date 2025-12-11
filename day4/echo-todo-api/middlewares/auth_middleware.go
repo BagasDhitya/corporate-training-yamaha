@@ -2,6 +2,7 @@ package middlewares
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"os"
 
@@ -35,6 +36,11 @@ func AuthMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
 		token, parseErr := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 			return []byte(os.Getenv("JWT_SECRET")), nil
 		})
+
+		log.Println("SECRET MIDDLEWARE:", os.Getenv("JWT_SECRET"))
+
+		log.Println("token : ", token.Valid)
+		log.Println("err : ", parseErr)
 
 		if parseErr != nil || !token.Valid {
 			return c.JSON(http.StatusUnauthorized, echo.Map{
