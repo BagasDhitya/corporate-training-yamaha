@@ -25,7 +25,7 @@ export default function TodoAuthForm({
         <label>Password</label>
         <input
           className="p-3 border text-black"
-          type="email"
+          type="password"
           value={passwordValue}
           onChange={onPasswordChange}
         />
