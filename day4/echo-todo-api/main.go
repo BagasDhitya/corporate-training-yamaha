@@ -10,8 +10,8 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 
 	"echo-todo-api/config"
-	"echo-todo-api/handlers"
 	"echo-todo-api/middlewares"
+	"echo-todo-api/routes"
 )
 
 func main() {
@@ -44,14 +44,8 @@ func main() {
 		return c.String(http.StatusOK, "Hello world! DB Connected. Echo API is running")
 	})
 
-	// todo router
-	e.GET("/api/todos", handlers.GetAllTodos)
-	e.GET("/api/todos/:id", handlers.GetById)
-	e.POST("/api/todos", handlers.CreateTodo)
-
-	e.POST("/api/auth/register", handlers.Register)
-	e.POST("/api/auth/login", handlers.Login)
-	e.GET("/api/auth/users", middlewares.AuthMiddleware(middlewares.AdminMiddleware(handlers.AdminGetAllUsers)))
+	routes.TodoRoutes(e)
+	routes.UserRoutes(e)
 
 	port := os.Getenv("PORT")
 	e.Logger.Fatal(e.Start(":" + port))
