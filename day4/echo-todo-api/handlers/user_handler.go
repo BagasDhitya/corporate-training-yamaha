@@ -93,10 +93,20 @@ func Login(c echo.Context) error {
 		})
 	}
 
+	// simpan token di HTTP Only Cookie
+	cookie := new(http.Cookie)
+	cookie.Name = "jwt"
+	cookie.Value = token
+	cookie.Path = "/"
+	cookie.HttpOnly = true // tidak bisa diakses JS
+	cookie.Secure = false  // pakai https -> true
+	cookie.SameSite = http.SameSiteStrictMode
+	cookie.MaxAge = 86400 // 1 hari
+
+	c.SetCookie(cookie)
+
 	return c.JSON(http.StatusOK, echo.Map{
 		"message": "Login success",
-		"email":   user.Email,
-		"token":   token,
 		"role":    user.Role,
 	})
 }

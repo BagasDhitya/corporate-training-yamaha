@@ -19,3 +19,14 @@ export async function loginUser(payload) {
     const result = await response.json()
     return result
 }
+
+export async function getAllUser(token) {
+    const response = await fetch(`${BASE_URL}/auth/users`, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
+    })
+    const result = await response.json()
+    return result
+}
