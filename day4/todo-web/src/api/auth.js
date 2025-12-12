@@ -1,4 +1,4 @@
-const BASE_URL = import.meta.env.VITE_BASE_URL
+const BASE_URL = import.meta.env.development.VITE_BASE_URL
 
 export async function registerUser(payload) {
     const response = await fetch(`${BASE_URL}/auth/register`, {
