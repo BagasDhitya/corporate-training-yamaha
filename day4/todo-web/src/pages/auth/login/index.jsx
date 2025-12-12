@@ -1,15 +1,19 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import TodoAuthForm from "../../../components/TodoAuthForm";
 import { loginUser } from "../../../api/auth";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   async function handleLogin(e) {
     e.preventDefault();
     const response = await loginUser({ email, password });
-    console.log("login result : ", response);
+    if (response.data.token) {
+      navigate("/dashboard");
+    }
   }
 
   return (

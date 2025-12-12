@@ -7,6 +7,7 @@ import Login from "../pages/auth/login";
 import Register from "../pages/auth/register";
 
 import TodoNavbar from "../components/TodoNavbar";
+import ProtectedRoute from "../components/ProtectedRoute";
 
 export default function Router() {
   return (
@@ -14,9 +15,30 @@ export default function Router() {
       <TodoNavbar />
       <Routes>
         <Route path="/" element={<App />} />
-        <Route path="/example" element={<Example />} />
-        <Route path="/create-todo" element={<CreateTodo />} />
-        <Route path="/dashboard" element={<Dashboard />} />
+        <Route
+          path="/example"
+          element={
+            <ProtectedRoute>
+              <Example />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/create-todo"
+          element={
+            <ProtectedRoute>
+              <CreateTodo />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
         <Route path="/auth/register" element={<Register />} />
         <Route path="/auth/login" element={<Login />} />
       </Routes>
